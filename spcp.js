@@ -98,8 +98,8 @@ function setup() {
         localStorage.tkid = tkid;
     }
 
-    createCanvas(w, HEIGHT);
-    img = createGraphics(w, HEIGHT);
+    createCanvas(w, sz);
+    img = createGraphics(w, sz);
     pixelDensity(displayDensity());
     //frameRate(20);
     centerCanvas();
@@ -181,7 +181,7 @@ function makeTl() {
     //if ((shm.indexOf(tp) != -1 || shmg.indexOf(tp) != -1 || shg.indexOf(tp) != -1) && xinc >= 0.8) fr = 0.01;
        
     let radius = sz * 0.00;
-    img.translate(w / 2, HEIGHT / 2);
+    img.translate(w / 2, sz / 2);
     let t = 0;
     let rd1 = random(0, 75);
     let rd2 = random(0, 55);
