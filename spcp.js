@@ -65,12 +65,13 @@ let sz = Math.min(WIDTH, HEIGHT);
 let palette;
 let tokenData = genTokenData(448);
 let noiseScale = 9e-11;
-let bgcols = ['#ffffff', '#000000', '#e9edc9', '#fefae0', '#f1faee', '#f5e4d7', '#03071e', '#212529', '#081c15']
+let bgcols = ['#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', '#03071e', '#212529', '#081c15', '#EDF5FC', '#090B0B', '#121616', '#E9EDED', '#250902', '#43291f'];
 let tkid = tokenData.tokenId;
 let seed = parseInt(tokenData.hash.slice(0, 16), 16)
 let R = new Random(seed);
 let strk = R.random_dec();
-let xinc = R.random_int(0, 14);
+let xinc = R.random_int(0, 21);
+let inph = R.random_num(-2.5, 2.5);
 let cshapes = [];
 let w = sz;
 let mot = false;
@@ -99,7 +100,7 @@ function setup() {
     ellipseMode(CORNER);
     let colArr = [];
     let ncols = 10;
-  
+    console.log(tokenData.hash + ' - ' + tkid);
     if (rdiv == 1) {
         for (t = 0; t < ncols; t++) {
             colArr.push(R.random_choice(paleta)[R.random_int(0, 9)]);
@@ -121,14 +122,6 @@ function centerCanvas() {
 }
 
 function keyPressed() {
-    if (key == ' ') {
-        mot = false;
-        noLoop();
-    }
-    if (key == 's') {
-        mot = true;
-        loop();
-    }
     if (key == 'c') {
         chcol=true;
     }
@@ -153,14 +146,14 @@ function genTokenData(projectNum) {
     for (var i = 0; i < 64; i++) {
         hash += Math.floor(Math.random() * 16).toString(16);
     }
-    data.hash = hash;
-    data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString();
+    data.hash = hash; //'0xa047e4e884341d34a6a082d04e5cba6ce086b60a1e3de13a0db775c3cb048b9a';
+    data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString(); //448000745
     return data;
 }
 
 function makeTl() {
 
-    //xinc = 0;
+    xinc = 40;
     //strk = 0.1;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
@@ -231,10 +224,9 @@ class cshape {
         this.n = n;
         this.np = np;
         this.alph = alph;
-        this.init();
-        this.ndiv = (n < np / 2) ? 100 : 200;
         this.chcol = false;
-        this.ph = 0;
+        this.ph = inph;
+        this.inde = 'inc';
     }
     
     show() {
@@ -251,18 +243,18 @@ class cshape {
         img.stroke(this.col);
 
         shape(this.ph, this.rseed, this.n);
-        this.ph += 0.1;
-    }
+        if (this.inde == 'des') { this.ph -= 0.05; } else { this.ph += 0.05 }
+        //this.ph += 0.05;
 
-    /*move() {
-        this.ang = frameCount / this.ndiv;
-    }*/
+        if (this.ph >= 3.5) this.inde = 'des'
+        if (this.ph <= -3.5) this.inde = 'inc'
+    }
 
     changeCol(val) {
         this.chcol = val;
     }
 
-    init() { }
+    init() {}
 }
 
 function shape(ph, seed, n) {
@@ -286,35 +278,64 @@ function shape(ph, seed, n) {
         switch (true) {
             case (xinc == 0):
                 img.strokeWeight(lnth);
-                img.line(x * 2, i, x, i * 2);
+                img.line(x * 2, i, x * ph, i * 2);
+                break;
+            case (xinc == 14):
+                img.strokeWeight(lnth);
+                img.line(x * 2, i * ph, x, i * 2);
                 break;
             case (xinc == 1):
                 img.strokeWeight(lnth);
-                img.line(x, i, x * 2, i);
+                img.line(x, i * ph, x * 2, i);
+                break;
+            case (xinc == 15):
+                img.strokeWeight(lnth);
+                img.line(x, i, x * 2, i * ph);
                 break;
             case (xinc == 2):
                 img.strokeWeight(lnth);
                 img.line(x * 2.2, i, x * 2, i);
                 break;
+            case (xinc == 16):
+                img.strokeWeight(lnth);
+                img.line(x * 2.2, i, x * 2, i*ph);
+                break;
+            case (xinc == 17):
+                img.strokeWeight(lnth);
+                img.line(x * 2.2, i * ph, x * 2, i);
+                break;
             case (xinc == 3):
                 img.strokeWeight(lnth);
-                img.line(x, i * 2, x, i * 3);
+                img.line(x*ph, i * 2, x, i * 3);
+                break;
+            case (xinc == 18):
+                img.strokeWeight(lnth);
+                img.line(x, i * 2, x * ph, i * 3);
                 break;
             case (xinc == 4):
                 img.strokeWeight(lnth);
                 if (n % 4 == 0) { img.line(x, i, x, i * 2); }
                 else { img.noFill(); img.circle(x * 2.5, i, rdinc1); }
                 break;
+            case (xinc == 19):
+                img.strokeWeight(lnth);
+                if (n % 4 == 0) { img.line(x, i, x, i * 2); }
+                else { img.noFill(); img.circle(x * 2.5, i*ph, rdinc1); }
+                break;
             case (xinc == 5):
-                if (n % 2 == 0) { img.strokeWeight(lnth); img.line(x, i, x * 2, i); }
-                else { img.strokeWeight(rdinc); img.point(x, i * 2.5); }
+                if (n % 4 == 0) { img.strokeWeight(lnth); img.line(x, i, x * 2, i); }
+                else { img.strokeWeight(rdinc); img.point(x*ph, i * 2.5); }
                 break;
             case (xinc == 6):
                 img.strokeWeight(rdinc);
                 img.point(x, i * 2.5);
                 break;
+            case (xinc == 20):
+                img.strokeWeight(rdinc);
+                img.point(x*ph, i * 2.5);
+                break;
             case (xinc == 7):
-                if (n % 4 == 0) { img.strokeWeight(lnth); img.line(x, i, x, i * 2); }
+                if (n % 4 == 0) { img.strokeWeight(lnth); img.line(x, i*ph, x, i * 2); }
                 else { img.strokeWeight(rdinc); img.point(x, i * 2.5); }
                 break;
             case (xinc == 8):
@@ -325,7 +346,7 @@ function shape(ph, seed, n) {
             case (xinc == 9):
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.circle(x * 2.5, i, rdinc1);
+                img.circle(x * 2.5, i*ph, rdinc1);
                 break;
             case (xinc == 10):
                 img.strokeWeight(lnth);
@@ -335,22 +356,22 @@ function shape(ph, seed, n) {
             case (xinc == 11):
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.arc(x * 2.5, i, x * 3, i, 0 + ph, PI / 4 + ph);
+                img.arc(x * 1.5, i*ph, x * 2, i, 0 + ph, PI / 4 + ph);
                 break;
             case (xinc == 12):
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.arc(x, i * 2.5, x, i * 3, 0 + ph, PI / 4 + ph);
+                img.arc(x, i * 2, x, i * 3, 0 + ph, PI / 4 + ph);
                 break;
             case (xinc == 13):
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.arc(x, i * 2.5, x, i * 3, PI - (ph * 0.8), TWO_PI * 0.7 - ph);
+                img.arc(x, i * 2.5, x-ph, i * 3, PI - (ph * 0.8), TWO_PI * 0.7 - ph);
                 break;
             default:
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.arc(x * 2.5, i, x * 3, i, PI - (ph * 0.8), TWO_PI * 0.7 - ph);
+                img.arc(x * 2, i, x * 2, i * ph, PI - (ph * 0.8), TWO_PI * 0.7 - ph);
                 break;
         }
     }
@@ -364,7 +385,6 @@ function draw() {
     for (let cs of cshapes) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
         cs.show();
-        //cs.move();
     }
     chcol = false;
 
