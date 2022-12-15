@@ -153,7 +153,7 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    xinc = 40;
+    //xinc = 40;
     //strk = 0.1;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
