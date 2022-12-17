@@ -71,7 +71,7 @@ let seed = parseInt(tokenData.hash.slice(0, 16), 16)
 let R = new Random(seed);
 let strk = R.random_dec();
 let xinc = R.random_int(0, 21);
-let inph = R.random_num(-2.5, 2.5);
+let inph = R.random_num(-2.7, 2.7);
 let cshapes = [];
 let w = sz;
 let mot = false;
@@ -153,12 +153,12 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 40;
-    //strk = 0.1;
+    //xinc = 14;
+    //strk = 0.3;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    npoints = R.random_int(1000, 2000);
+    let npoints = R.random_int(1000, 2000);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -179,7 +179,7 @@ function makeTl() {
         img.scale(prc);
     }
 
-    console.log(' sp5r: ' + sp5r + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
+    console.log(' inph: ' + inph + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
     for (let i = 0; i < npoints; i++) {
         let size = map((i / mapP) ** 0.8, 0, 1, sz * fr, 0);
@@ -244,7 +244,6 @@ class cshape {
 
         shape(this.ph, this.rseed, this.n);
         if (this.inde == 'des') { this.ph -= 0.05; } else { this.ph += 0.05 }
-        //this.ph += 0.05;
 
         if (this.ph >= 3.5) this.inde = 'des'
         if (this.ph <= -3.5) this.inde = 'inc'
@@ -278,11 +277,13 @@ function shape(ph, seed, n) {
         switch (true) {
             case (xinc == 0):
                 img.strokeWeight(lnth);
-                img.line(x * 2, i, x * ph, i * 2);
+                if (inph <= 1.2 && inph >= -1.2) img.line(x * ph, i, x * ph, i * 2);
+                else img.line(x * 2, i, x * ph, i * 2);
                 break;
             case (xinc == 14):
                 img.strokeWeight(lnth);
-                img.line(x * 2, i * ph, x, i * 2);
+                if (inph >= -1.5 && inph <= 1.5) img.line(x * 2, i * ph, x, i * ph);
+                else img.line(x * 2, i * ph, x, i * 2);
                 break;
             case (xinc == 1):
                 img.strokeWeight(lnth);
@@ -306,7 +307,8 @@ function shape(ph, seed, n) {
                 break;
             case (xinc == 3):
                 img.strokeWeight(lnth);
-                img.line(x*ph, i * 2, x, i * 3);
+                if (inph <= 1.4 && inph >= -1.4) img.line(x*ph, i * 2, x, i * 3);
+                else img.line(x, i * 2.5, x, i * 3);
                 break;
             case (xinc == 18):
                 img.strokeWeight(lnth);
@@ -341,7 +343,8 @@ function shape(ph, seed, n) {
             case (xinc == 8):
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.circle(x, i * 2.5, rdinc1);
+                if (inph >= 1.4 && inph <= -1.4) img.circle(x * ph, i * 2.5, rdinc1);
+                else img.circle(x, i * 2.5, rdinc1);
                 break;
             case (xinc == 9):
                 img.strokeWeight(lnth);
@@ -351,7 +354,8 @@ function shape(ph, seed, n) {
             case (xinc == 10):
                 img.strokeWeight(lnth);
                 img.noFill();
-                img.rect(x, i * 2.5, 4, 15);
+                if (inph <= 1 && inph >= -1) img.rect(x * ph, i * 2.5, 4, 15);
+                else img.rect(x, i * 2.5, 4 - ph, 15);
                 break;
             case (xinc == 11):
                 img.strokeWeight(lnth);
