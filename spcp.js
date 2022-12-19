@@ -249,7 +249,7 @@ class cshape {
         }
 
         shape(this.ph, this.rseed, this.n, this.np);
-        if (this.inde == 'des') { this.ph -= 0.03; } else { this.ph += 0.03 }
+        if (this.inde == 'des') { this.ph -= 0.04; } else { this.ph += 0.04 }
 
         if (this.ph >= mxmn) this.inde = 'des'
         if (this.ph <= -mxmn) this.inde = 'inc'
