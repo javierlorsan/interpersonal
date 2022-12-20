@@ -419,13 +419,13 @@ function draw() {
 
     img.clear();
 
-    //let delay = 0;
+    let delay = 0;
 
     for (let cs of cshapes) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
         if (frameCount % 120 == 0) { cs.changeStrk(true); console.log(strk); } else { cs.changeStrk(false) };
-        //setTimeout(function () { if (cs.getStk() != strk) cs.setStk(strk); }, dly + delay);
-        //delay += dly;
+        setTimeout(function () { if (cs.getStk() != strk) cs.setStk(strk); }, dly + delay);
+        delay += dly;
         cs.show();
     }
     chcol = false;
