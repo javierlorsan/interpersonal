@@ -156,11 +156,11 @@ function genTokenData(projectNum) {
 function makeTl() {
 
     //xinc = 0;
-    //strk = 0.3;
+    strk = 0.8;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = 900;//R.random_int(500, 2000);
+    let npoints = 1400;//R.random_int(500, 2000);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -250,7 +250,7 @@ class cshape {
         img.stroke(this.col);
 
         if (this.chstrk) {
-            if (this.n == 0) { mxmn = R.random_int(4, 8); strk = random(); console.log(strk);}
+            if (this.n == 0) { mxmn = R.random_int(4, 6); strk = random(); console.log(strk);}
         }
 
         shape(this.ph, this.rseed, this.n, this.np, this.stk);
@@ -423,7 +423,7 @@ function draw() {
 
     for (let cs of cshapes) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
-        if (frameCount % 120 == 0) { cs.changeStrk(true); console.log(strk); } else { cs.changeStrk(false) };
+        if (frameCount % 120 == 0) { cs.changeStrk(true);} else { cs.changeStrk(false) };
         setTimeout(function () { if (cs.getStk() != strk) cs.setStk(strk); }, dly + delay);
         delay += dly;
         cs.show();
