@@ -69,7 +69,6 @@ let bgcols = ['#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', 
 let tkid = tokenData.tokenId;
 let seed = parseInt(tokenData.hash.slice(0, 16), 16)
 let R = new Random(seed);
-let strk = R.random_dec();
 let xinc = R.random_int(0, 12);
 let inph = R.random_num(-2.7, 2.7);
 let cshapes = [];
@@ -85,10 +84,12 @@ let rdinc = R.random_int(2, 4);
 let rdinc1 = R.random_int(4, 7);
 let rdiv = R.random_choice([1, 2]);
 let sp5r = R.random_int(85, 120);
+let strk = R.random_dec();
 let lnth = (strk > 0.2) ? strk : 0.5;
 let shp5for = R.random_choice([5, 10, 15, 20]);
 let mxmn = 3.5;
 let chcol = false;
+let dly = 50;
 
 function setup() {
 
@@ -96,7 +97,7 @@ function setup() {
     img = createGraphics(w, w);
     pixelDensity(displayDensity());
     frameRate(20);
-    if (strk < 0.26) frameRate(10);
+    //if (strk < 0.26) frameRate(10);
     centerCanvas();
     ellipseMode(CORNER);
     let colArr = [];
@@ -159,7 +160,7 @@ function makeTl() {
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = R.random_int(500, 2000);
+    let npoints = 900;//R.random_int(500, 2000);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -179,6 +180,9 @@ function makeTl() {
         else prc = dif + 1;
         img.scale(prc);
     }
+
+    if (npoints < 1000) { dly = 200; }
+    else if (npoints < 1500) { dly = 75;}
 
     console.log(' inph: ' + inph + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
@@ -229,6 +233,7 @@ class cshape {
         this.ph = inph;
         this.inde = 'inc';
         this.chstrk = false;
+        this.stk = strk;
     }
     
     show() {
@@ -245,11 +250,11 @@ class cshape {
         img.stroke(this.col);
 
         if (this.chstrk) {
-            if (this.n == 0) { strk = random(); mxmn = R.random_int(4, 8); }
+            if (this.n == 0) { mxmn = R.random_int(4, 8); strk = random(); console.log(strk);}
         }
 
-        shape(this.ph, this.rseed, this.n, this.np);
-        if (this.inde == 'des') { this.ph -= 0.04; } else { this.ph += 0.04 }
+        shape(this.ph, this.rseed, this.n, this.np, this.stk);
+        if (this.inde == 'des') { this.ph -= 0.05; } else { this.ph += 0.05 }
 
         if (this.ph >= mxmn) this.inde = 'des'
         if (this.ph <= -mxmn) this.inde = 'inc'
@@ -263,10 +268,14 @@ class cshape {
         this.chstrk = val;
     }
 
+    getStk() { return this.stk; }
+    setStk(val) { this.stk = val;}
+
+
     init() {}
 }
 
-function shape(ph, seed, n, np) {
+function shape(ph, seed, n, np, stk) {
     let x;
     let pitau = (pntcur < 0.5) ? PI : TAU;
     img.rotate(pitau / nrot);
@@ -274,10 +283,13 @@ function shape(ph, seed, n, np) {
         let r1 = (w / rdd1) + sin(i * 10 + ph) * rdd2;
         t += seed;
         switch (true) {
-            case (strk >= 0.59):
+            case (stk >= 0.75):
+                x = sin(frameCount / 10) * r1
+                break;
+            case (stk >= 0.5):
                 x = cos(t - frameCount * 3) * r1;
                 break;
-            case (strk >= 0.26):
+            case (stk >= 0.25):
                 x = sin(t) * (i / 100) * r1;
                 break;
             default:
@@ -285,48 +297,17 @@ function shape(ph, seed, n, np) {
                 break;
         }
         switch (true) {
-            //case (xinc == 0):
-                //img.strokeWeight(lnth);
-                //if (inph <= 1.2 && inph >= -1.2) img.line(x * ph, i, x * ph, i * 2);
-                //else img.line(x * 2, i, x * ph, i * 2);
-                //img.line(x * 2, i, x * ph, i * 2);
-                //break;
+            
             case (xinc == 0):
                 img.strokeWeight(lnth);
-                //if (inph >= -1.5 && inph <= 1.5) img.line(x * 2, i * ph, x, i * ph);
-                //else img.line(x * 2, i * ph, x, i * 2);
                 img.line(x * 2, i * ph, x, i * ph);
                 break;
-            //case (xinc == 1):
-            //    img.strokeWeight(lnth);
-            //    img.line(x, i * ph, x * 2, i);
-            //    break;
-            //case (xinc == 15):
-            //    img.strokeWeight(lnth);
-            //    img.line(x, i, x * 2, i * ph);
-            //    break;
-            //case (xinc == 1):
-            //    img.strokeWeight(lnth);
-            //    img.line(x * 2.2, i, x * 2, i);
-            //    break;
-            //case (xinc == 16):
-            //    img.strokeWeight(lnth);
-            //    img.line(x * 2.2, i, x * 2, i*ph);
-            //    break;
-            //case (xinc == 17):
-            //    img.strokeWeight(lnth);
-            //    img.line(x * 2.2, i * ph, x * 2, i);
-            //    break;
             case (xinc == 1):
                 img.strokeWeight(lnth);
                 //if (inph <= 1.4 && inph >= -1.4) img.line(x*ph, i * 2, x, i * 3);
                 //else img.line(x, i * 2.5, x, i * 3);
                 img.line(x, i * 2.5, x, i * 3);
                 break;
-            //case (xinc == 18):
-            //    img.strokeWeight(lnth);
-            //    img.line(x, i * 2, x * ph, i * 3);
-            //    break;
             case (xinc == 2):
                 img.strokeWeight(lnth);
                 if (n < np / 3) { img.line(x, i, x, i * 2); }
@@ -381,6 +362,38 @@ function shape(ph, seed, n, np) {
                 img.noFill();
                 img.arc(x * 1.5, i*ph, x * 2, i, 0 + ph, PI / 4 + ph);
                 break;
+            //if (inph >= -1.5 && inph <= 1.5) img.line(x * 2, i * ph, x, i * ph);
+            //case (xinc == 18):
+            //    img.strokeWeight(lnth);
+            //    img.line(x, i * 2, x * ph, i * 3);
+            //    break;
+            //else img.line(x * 2, i * ph, x, i * 2);
+            //case (xinc == 0):
+                //img.strokeWeight(lnth);
+                //if (inph <= 1.2 && inph >= -1.2) img.line(x * ph, i, x * ph, i * 2);
+                //else img.line(x * 2, i, x * ph, i * 2);
+                //img.line(x * 2, i, x * ph, i * 2);
+                //break;
+            //case (xinc == 1):
+            //    img.strokeWeight(lnth);
+            //    img.line(x, i * ph, x * 2, i);
+            //    break;
+            //case (xinc == 15):
+            //    img.strokeWeight(lnth);
+            //    img.line(x, i, x * 2, i * ph);
+            //    break;
+            //case (xinc == 1):
+            //    img.strokeWeight(lnth);
+            //    img.line(x * 2.2, i, x * 2, i);
+            //    break;
+            //case (xinc == 16):
+            //    img.strokeWeight(lnth);
+            //    img.line(x * 2.2, i, x * 2, i*ph);
+            //    break;
+            //case (xinc == 17):
+            //    img.strokeWeight(lnth);
+            //    img.line(x * 2.2, i * ph, x * 2, i);
+            //    break;
             //case (xinc == 12):
             //    img.strokeWeight(lnth);
             //    img.noFill();
@@ -405,12 +418,23 @@ function draw() {
     background(bgcolor);
 
     img.clear();
+
+    //let delay = 0;
+
     for (let cs of cshapes) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
-        if (frameCount % 120 == 0) { cs.changeStrk(true); } else { cs.changeStrk(false) };
+        if (frameCount % 120 == 0) { cs.changeStrk(true); console.log(strk); } else { cs.changeStrk(false) };
+        //setTimeout(function () { if (cs.getStk() != strk) cs.setStk(strk); }, dly + delay);
+        //delay += dly;
         cs.show();
     }
     chcol = false;
+
+    /*let delay = 0;
+    cshapes.forEach(function (csh) {
+        setTimeout(function () { if (csh.getStk() != strk) csh.setStk(strk); }, dly + delay);
+        delay += dly;
+    });*/
 
     imgClone = img.get();
     image(imgClone, 0, 0);
