@@ -89,7 +89,8 @@ let lnth = (strk > 0.2) ? strk : 0.5;
 let shp5for = R.random_choice([5, 10, 15, 20]);
 let mxmn = 3.5;
 let chcol = false;
-let dly = 30;
+let dly = 20;
+let itemsTime = [];
 
 function setup() {
 
@@ -160,7 +161,7 @@ function makeTl() {
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = R.random_int(500, 2000);
+    let npoints = 900;//R.random_int(500, 2000);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -199,6 +200,7 @@ function makeTl() {
             color = lerpColorScheme(curlNoise(x * noiseScale, (y + 0) * noiseScale, 0), palette, alph);
         }
         cshapes.push(new cshape(x, y, tp, color, size, i, alph, npoints))
+        itemsTime.push(0);
 
         t += R.random_num(20, 30);
         if (radius < sz) {
@@ -425,11 +427,14 @@ function draw() {
     let delay = 0;
     cshapes.forEach(function (cs) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
-        if (frameCount % 120 == 0) { cs.changeStrk(true); } else { cs.changeStrk(false) };
-        setTimeout(function () { if (cs.getStk() != strk) cs.setStk(strk); }, dly + delay);
-        delay += dly;
+        if (frameCount % 150 == 0) { cs.changeStrk(true); } else { cs.changeStrk(false) };
+        if (cs.getStk() != strk) {
+            itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
+        } else {
+            clearInterval(itemsTime[cshapes.indexOf(cs)]);
+        }
+        delay += 4;
         cs.show();
-        //console.log(cs.getStk() + ' - ' + strk);
     });
     chcol = false;
 
