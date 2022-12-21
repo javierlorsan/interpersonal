@@ -89,7 +89,7 @@ let lnth = (strk > 0.2) ? strk : 0.5;
 let shp5for = R.random_choice([5, 10, 15, 20]);
 let mxmn = 3.5;
 let chcol = false;
-let dly = 50;
+let dly = 30;
 
 function setup() {
 
@@ -160,7 +160,7 @@ function makeTl() {
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = 1400;//R.random_int(500, 2000);
+    let npoints = R.random_int(500, 2000);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -181,12 +181,12 @@ function makeTl() {
         img.scale(prc);
     }
 
-    if (npoints < 1000) { dly = 200; }
-    else if (npoints < 1500) { dly = 75;}
+    if (npoints <= 1000) { dly = 90; }
+    else if (npoints <= 1500) { dly = 60;}
 
     console.log(' inph: ' + inph + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
-    for (let i = 0; i < npoints; i++) {
+    for (let i = 0; i < npoints - 1; i++) {
         let size = map((i / mapP) ** 0.8, 0, 1, sz * fr, 0);
 
         let d = R.random_num(radius / 2, radius / R.random_int(1, 8)); 
@@ -250,7 +250,7 @@ class cshape {
         img.stroke(this.col);
 
         if (this.chstrk) {
-            if (this.n == 0) { mxmn = R.random_int(4, 6); strk = random(); console.log(strk);}
+            if (this.n == 0) { mxmn = R.random_int(4, 6); strk = Math.random().toFixed(2); console.log(strk + ' - ' + frameCount);}
         }
 
         shape(this.ph, this.rseed, this.n, this.np, this.stk);
@@ -420,21 +420,15 @@ function draw() {
     img.clear();
 
     let delay = 0;
-
-    for (let cs of cshapes) {
+    cshapes.forEach(function (cs) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
-        if (frameCount % 120 == 0) { cs.changeStrk(true);} else { cs.changeStrk(false) };
+        if (frameCount % 120 == 0) { cs.changeStrk(true); } else { cs.changeStrk(false) };
         setTimeout(function () { if (cs.getStk() != strk) cs.setStk(strk); }, dly + delay);
         delay += dly;
         cs.show();
-    }
+        //console.log(cs.getStk() + ' - ' + strk);
+    });
     chcol = false;
-
-    /*let delay = 0;
-    cshapes.forEach(function (csh) {
-        setTimeout(function () { if (csh.getStk() != strk) csh.setStk(strk); }, dly + delay);
-        delay += dly;
-    });*/
 
     imgClone = img.get();
     image(imgClone, 0, 0);
