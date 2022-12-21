@@ -156,7 +156,7 @@ function genTokenData(projectNum) {
 function makeTl() {
 
     //xinc = 0;
-    strk = 0.8;
+    //strk = 0.9;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -250,7 +250,7 @@ class cshape {
         img.stroke(this.col);
 
         if (this.chstrk) {
-            if (this.n == 0) { mxmn = R.random_int(4, 6); strk = Math.random().toFixed(2); console.log(strk + ' - ' + frameCount);}
+            if (this.n == 0) { mxmn = R.random_int(4, 5); strk = Math.random().toFixed(2); console.log(strk + ' - ' + frameCount);}
         }
 
         shape(this.ph, this.rseed, this.n, this.np, this.stk);
@@ -283,13 +283,16 @@ function shape(ph, seed, n, np, stk) {
         let r1 = (w / rdd1) + sin(i * 10 + ph) * rdd2;
         t += seed;
         switch (true) {
-            case (stk >= 0.75):
+            case (stk >= 0.8):
+                x = cos(radians(i * 10)) * r1
+                break;
+            case (stk >= 0.6):
                 x = sin(frameCount / 10) * r1
                 break;
-            case (stk >= 0.5):
+            case (stk >= 0.4):
                 x = cos(t - frameCount * 3) * r1;
                 break;
-            case (stk >= 0.25):
+            case (stk >= 0.2):
                 x = sin(t) * (i / 100) * r1;
                 break;
             default:
