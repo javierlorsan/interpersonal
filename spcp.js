@@ -161,7 +161,7 @@ function makeTl() {
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = 750;//R.random_int(500, 2000);
+    let npoints = 1250;//R.random_int(500, 1500);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -264,13 +264,9 @@ class cshape {
         if (this.ph <= -mxmn) this.inde = 'inc'
     }
 
-    changeCol(val) {
-        this.chcol = val;
-    }
+    changeCol(val) {this.chcol = val;}
 
-    changeStrk(val) {
-        this.chstrk = val;
-    }
+    changeStrk(val) {this.chstrk = val;}
 
     getStk() { return this.stk; }
     setStk(val) { this.stk = val;}
@@ -426,16 +422,20 @@ function draw() {
 
     img.clear();
 
-    let delay = 100;
+    let delay = 0;
     cshapes.forEach(function (cs) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
-        if (frameCount % 150 == 0) { cs.changeStrk(true); } else { cs.changeStrk(false) };
-        if (cs.getStk() != strk) {
-            itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
-        } else {
-            if (itemsTime[cshapes.indexOf(cs)]) clearTimeout(itemsTime[cshapes.indexOf(cs)]);
-        }
-        delay += 5;
+        if (frameCount % 160 == 0) {
+            cs.changeStrk(true);
+            if (cs.getStk() == strk) {
+                if (itemsTime[cshapes.indexOf(cs)]) clearTimeout(itemsTime[cshapes.indexOf(cs)]);
+            } else {
+                itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
+            }
+            delay += 7;
+        } else
+        { cs.changeStrk(false) };
+        
         cs.show();
     });
     chcol = false;
