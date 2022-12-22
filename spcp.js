@@ -161,7 +161,7 @@ function makeTl() {
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = 1250;//R.random_int(500, 1500);
+    let npoints = 1000;//R.random_int(500, 1500);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -432,7 +432,7 @@ function draw() {
             } else {
                 itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
             }
-            delay += 7;
+            delay += 9;
         } else
         { cs.changeStrk(false) };
         
