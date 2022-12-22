@@ -89,7 +89,7 @@ let lnth = (strk > 0.2) ? strk : 0.5;
 let shp5for = R.random_choice([5, 10, 15, 20]);
 let mxmn = 3.5;
 let chcol = false;
-//let dly = 1;
+let dly = 5;
 let itemsTime = [];
 
 function setup() {
@@ -161,7 +161,7 @@ function makeTl() {
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
-    let npoints = 1000;//R.random_int(500, 1500);
+    let npoints = R.random_int(500, 1500);
     let mapP = int(npoints * 0.6);
     let x, y;
     let fr = 0.15;
@@ -182,10 +182,9 @@ function makeTl() {
         img.scale(prc);
     }
 
-    /*if (npoints <= 750) { dly = 5; }
-    else if (npoints <= 1000) { dly = 4; }
-    else if (npoints <= 1250) { dly = 3; }
-    else if (npoints <= 1500) { dly = 2; }*/
+    if (npoints <= 750) { dly = 11; }
+    else if (npoints <= 1000) { dly = 9; }
+    else if (npoints <= 1250) { dly = 7; }
 
     console.log(' inph: ' + inph + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
@@ -432,7 +431,7 @@ function draw() {
             } else {
                 itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
             }
-            delay += 9;
+            delay += dly;
         } else
         { cs.changeStrk(false) };
         
