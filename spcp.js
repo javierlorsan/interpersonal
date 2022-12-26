@@ -89,8 +89,9 @@ let lnth = (strk > 0.2) ? strk : 0.5;
 let shp5for = R.random_choice([5, 10, 15, 20]);
 let mxmn = 3.5;
 let chcol = false;
-let dly = 5;
+let dly = 3;
 let itemsTime = [];
+let noiseFilter;
 
 function setup() {
 
@@ -113,8 +114,19 @@ function setup() {
     }
 
     palette = colArr;
-
     background(bgcolor);
+
+    noiseFilter = createImage(w, w);
+    noiseFilter.loadPixels();
+    let pix = noiseFilter.width * noiseFilter.height * 4;
+    for (let i = 0; i < pix; i += 4) {
+        noiseFilter.pixels[i] = random(255);
+        noiseFilter.pixels[i + 1] = random(255);
+        noiseFilter.pixels[i + 2] = random(255);
+        noiseFilter.pixels[i + 3] = 50;
+    }
+    noiseFilter.updatePixels();
+
     noLoop();
     makeTl();
 }
@@ -157,7 +169,7 @@ function genTokenData(projectNum) {
 function makeTl() {
 
     //xinc = 0;
-    //strk = 0.9;
+    //strk = 0.85;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -182,9 +194,9 @@ function makeTl() {
         img.scale(prc);
     }
 
-    if (npoints <= 750) { dly = 11; }
-    else if (npoints <= 1000) { dly = 9; }
-    else if (npoints <= 1250) { dly = 7; }
+    if (npoints <= 750) { dly = 9; }
+    else if (npoints <= 1000) { dly = 7; }
+    else if (npoints <= 1250) { dly = 5; }
 
     console.log(' inph: ' + inph + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
@@ -283,15 +295,19 @@ function shape(ph, seed, n, np, stk) {
         t += seed;
         switch (true) {
             case (stk >= 0.8):
+                //x = tan(i / r1 + frameCount / 100) * (w / 10);
+                x = (w / 10) + r1 * sin(map(i, 0, i - 1, 0, pitau)) * sin(t);
+                break;
+            case (stk >= 0.61):
                 x = cos(radians(i * 10)) * r1
                 break;
-            case (stk >= 0.6):
+            case (stk >= 0.49):
                 x = sin(frameCount / 10) * r1
                 break;
-            case (stk >= 0.4):
+            case (stk >= 0.33):
                 x = cos(t - frameCount * 3) * r1;
                 break;
-            case (stk >= 0.2):
+            case (stk >= 0.19):
                 x = sin(t) * (i / 100) * r1;
                 break;
             default:
@@ -418,7 +434,6 @@ function shape(ph, seed, n, np, stk) {
 function draw() {
 
     background(bgcolor);
-
     img.clear();
 
     let delay = 0;
@@ -439,8 +454,19 @@ function draw() {
     });
     chcol = false;
 
+    image(noiseFilter, 0, 0);
     imgClone = img.get();
     image(imgClone, 0, 0);
+    
+}
+
+function createLgradient(col1, col2){
+    noStroke();
+    var gradbg = drawingContext.createLinearGradient(0, 0, width, 0);
+    gradbg.addColorStop(0, col1);
+    gradbg.addColorStop(1, col2);
+    drawingContext.fillStyle = gradbg;
+    rect(0, 0, w, w);
 }
 
 function lerpColorScheme(n, colors, alph) {
