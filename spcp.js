@@ -80,7 +80,7 @@ let nrot = R.random_int(5, 25);
 let t = 0;
 let rdd1 = R.random_int(10, 90);//R.random_int(10,128);//R.random_choice([8, 16, 32, 64, 128]);
 let rdd2 = R.random_int(90, 160);//R.random_int(10, 90);//R.random_choice([10, 20, 30, 40, 50, 60, 70, 80, 90]);
-let rdinc = R.random_int(2, 4);
+let rdinc = R.random_int(3, 8);
 let rdinc1 = R.random_int(4, 7);
 let rdiv = R.random_choice([1, 2]);
 let sp5r = R.random_int(85, 120);
@@ -116,16 +116,7 @@ function setup() {
     palette = colArr;
     background(bgcolor);
 
-    noiseFilter = createImage(w, w);
-    noiseFilter.loadPixels();
-    let pix = noiseFilter.width * noiseFilter.height * 4;
-    for (let i = 0; i < pix; i += 4) {
-        noiseFilter.pixels[i] = random(255);
-        noiseFilter.pixels[i + 1] = random(255);
-        noiseFilter.pixels[i + 2] = random(255);
-        noiseFilter.pixels[i + 3] = 50;
-    }
-    noiseFilter.updatePixels();
+    if (tkid % 2 == 0) nsFilter();
 
     noLoop();
     makeTl();
@@ -143,6 +134,21 @@ function keyPressed() {
     if (key == 'b') {
         bgcolor = R.random_choice(bgcols);
     }
+}
+
+function nsFilter() {
+
+    noiseFilter = createImage(w, w);
+    noiseFilter.loadPixels();
+    let pixeli3 = R.random_int(10, 50);
+    let pix = noiseFilter.width * noiseFilter.height * 4;
+    for (let i = 0; i < pix; i += 4) {
+        noiseFilter.pixels[i] = random(255);
+        noiseFilter.pixels[i + 1] = random(255);
+        noiseFilter.pixels[i + 2] = random(255);
+        noiseFilter.pixels[i + 3] = pixeli3;
+    }
+    noiseFilter.updatePixels();
 }
 
 function mouseClicked() {
@@ -168,8 +174,8 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 0;
-    //strk = 0.85;
+    //xinc = 5;
+    //strk = 0.35;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -286,28 +292,32 @@ class cshape {
     init() {}
 }
 
+
 function shape(ph, seed, n, np, stk) {
     let x;
     let pitau = (pntcur < 0.5) ? PI : TAU;
+    let s = millis();
     img.rotate(pitau / nrot);
     for (let i = 0; i < sp5r; i += shp5for) {
         let r1 = (w / rdd1) + sin(i * 10 + ph) * rdd2;
         t += seed;
         switch (true) {
-            case (stk >= 0.8):
-                //x = tan(i / r1 + frameCount / 100) * (w / 10);
+            case (stk >= 0.84):
+                x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
+                break;
+            case (stk >= 0.71):
                 x = (w / 10) + r1 * sin(map(i, 0, i - 1, 0, pitau)) * sin(t);
                 break;
-            case (stk >= 0.61):
+            case (stk >= 0.57):
                 x = cos(radians(i * 10)) * r1
                 break;
-            case (stk >= 0.49):
+            case (stk >= 0.43):
                 x = sin(frameCount / 10) * r1
                 break;
-            case (stk >= 0.33):
+            case (stk >= 0.29):
                 x = cos(t - frameCount * 3) * r1;
                 break;
-            case (stk >= 0.19):
+            case (stk >= 0.15):
                 x = sin(t) * (i / 100) * r1;
                 break;
             default:
@@ -448,25 +458,19 @@ function draw() {
             }
             delay += dly;
         } else
-        { cs.changeStrk(false) };
+        {
+            cs.changeStrk(false);
+            if (!itemsTime[cshapes.indexOf(cs)] && cs.getStk() != strk) itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
+        };
         
         cs.show();
     });
     chcol = false;
 
-    image(noiseFilter, 0, 0);
+    if (tkid % 2 == 0) image(noiseFilter, 0, 0);
     imgClone = img.get();
     image(imgClone, 0, 0);
     
-}
-
-function createLgradient(col1, col2){
-    noStroke();
-    var gradbg = drawingContext.createLinearGradient(0, 0, width, 0);
-    gradbg.addColorStop(0, col1);
-    gradbg.addColorStop(1, col2);
-    drawingContext.fillStyle = gradbg;
-    rect(0, 0, w, w);
 }
 
 function lerpColorScheme(n, colors, alph) {
