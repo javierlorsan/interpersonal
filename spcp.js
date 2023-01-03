@@ -92,6 +92,8 @@ let chcol = false;
 let dly = 3;
 let itemsTime = [];
 let noiseFilter;
+let cl1, cl2;
+let lgr = [];
 
 function setup() {
 
@@ -99,7 +101,6 @@ function setup() {
     img = createGraphics(w, w);
     pixelDensity(displayDensity());
     frameRate(20);
-    //if (strk < 0.26) frameRate(10);
     centerCanvas();
     ellipseMode(CORNER);
     let colArr = [];
@@ -116,10 +117,20 @@ function setup() {
     palette = colArr;
     background(bgcolor);
 
-    if (tkid % 2 == 0) nsFilter();
+    for (z = 0; z < 4; z++) { lgr.push(R.random_choice([0, w]));}
+
+    setGradCols();
+    
+    if (tkid % 3 == 0) createLgradient(cl1, cl2);
+    else if (tkid % 2 == 0) nsFilter();
 
     noLoop();
     makeTl();
+}
+
+function setGradCols() {
+    cl1 = R.random_choice(paleta)[R.random_int(0, 9)];
+    cl2 = R.random_choice(paleta)[R.random_int(0, 9)];
 }
 
 function centerCanvas() {
@@ -132,7 +143,8 @@ function keyPressed() {
         chcol=true;
     }
     if (key == 'b') {
-        bgcolor = R.random_choice(bgcols);
+        if (tkid % 3 == 0) setGradCols();
+        else bgcolor = R.random_choice(bgcols);
     }
 }
 
@@ -175,7 +187,7 @@ function genTokenData(projectNum) {
 function makeTl() {
 
     //xinc = 5;
-    //strk = 0.35;
+    strk = 0.85;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -191,7 +203,7 @@ function makeTl() {
 
     img.noiseSeed(floor(R.random_num(0, 10e6)));
     img.translate(w / 2, w / 2);
-
+    
     if (Math.floor(w) != 657) {
         let dif = (w - 657) / 657
         let prc;
@@ -460,17 +472,28 @@ function draw() {
         } else
         {
             cs.changeStrk(false);
-            if (!itemsTime[cshapes.indexOf(cs)] && cs.getStk() != strk) itemsTime[cshapes.indexOf(cs)] = setTimeout(function () { cs.setStk(strk); }, delay);
+            if (!itemsTime[cshapes.indexOf(cs)] && cs.getStk() != strk) { console.log('stk: ' + cshapes.indexOf(cs) + ' - ' + cs.getStk()); cs.setStk(strk);}
         };
         
         cs.show();
     });
     chcol = false;
 
-    if (tkid % 2 == 0) image(noiseFilter, 0, 0);
+    if (tkid % 3 == 0) createLgradient(cl1, cl2);
+    else if (tkid % 2 == 0) image(noiseFilter, 0, 0);
+
     imgClone = img.get();
     image(imgClone, 0, 0);
     
+}
+
+function createLgradient(col1, col2){
+    noStroke();
+    let grbg = drawingContext.createLinearGradient(lgr[0], lgr[1], lgr[2], lgr[3]);
+    grbg.addColorStop(0, col1);
+    grbg.addColorStop(1, col2);
+    drawingContext.fillStyle = grbg;
+    rect(0, 0, w, w);
 }
 
 function lerpColorScheme(n, colors, alph) {
