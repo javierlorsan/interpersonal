@@ -315,7 +315,8 @@ function shape(ph, seed, n, np, stk) {
         t += seed;
         switch (true) {
             case (stk >= 0.84):
-                x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
+                //x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
+                x = 166  * sin((s - t * 17.7) * 0.000375);
                 break;
             case (stk >= 0.71):
                 x = (w / 10) + r1 * sin(map(i, 0, i - 1, 0, pitau)) * sin(t);
@@ -472,7 +473,7 @@ function draw() {
         } else
         {
             cs.changeStrk(false);
-            if (!itemsTime[cshapes.indexOf(cs)] && cs.getStk() != strk) { console.log('stk: ' + cshapes.indexOf(cs) + ' - ' + cs.getStk()); cs.setStk(strk);}
+            if (!itemsTime[cshapes.indexOf(cs)] && cs.getStk() != strk) { cs.setStk(strk); } //console.log('stk: ' + cshapes.indexOf(cs) + ' - ' + cs.getStk());
         };
         
         cs.show();
