@@ -316,7 +316,7 @@ function shape(ph, seed, n, np, stk) {
         switch (true) {
             case (stk >= 0.84):
                 //x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
-                x = 166  * sin((s - t * 17.7) * 0.000375);
+                x = 166  * sin((s - t * 17.7) * 0.000375)/r1;
                 break;
             case (stk >= 0.71):
                 x = (w / 10) + r1 * sin(map(i, 0, i - 1, 0, pitau)) * sin(t);
