@@ -136,10 +136,10 @@ function setGradCols() {
 
 function genColor(scl) {
     let tmp = color(R.random_choice(paleta)[R.random_int(0, 9)]);
-    mCol = color(hue(tmp) + R.random_num(-1.99, 1.99) * scl,
-        saturation(tmp) + R.random_num(-1.99, 1.99) * scl,
-        brightness(tmp) + R.random_num(-1.99, 1.99) * scl,
-        R.random_num(10, 50));
+    mCol = color(hue(tmp) + R.random_num(-2, 2) * scl,
+        saturation(tmp) + R.random_num(-2, 2) * scl,
+        brightness(tmp) + R.random_num(-2, 2) * scl,
+        R.random_num(90, 150));
     return mCol;
 }
 
@@ -147,7 +147,7 @@ function setGrad(pos, rad) {
     noStroke();
     let q = 0;
     console.log(grdStart);
-    grad = drawingContext.createRadialGradient(pos.x + grdStart, pos.y + grdStart, grdStart, pos.x + grdStart * 0.25, pos.y + grdStart * 0.25, rad);
+    grad = drawingContext.createRadialGradient(pos.x + grdStart, pos.y + grdStart, grdStart, pos.x, pos.y, rad);
     for (let step = 0; step <= 1.0; step += 0.5) {
         grad.addColorStop(step, arrColGrad[q]);
         q++;
