@@ -92,8 +92,7 @@ let chcol = false;
 let dly = 3;
 let itemsTime = [];
 let noiseFilter;
-let cl1, cl2;
-let lgr = [];
+let arrColGrad = [];
 
 function setup() {
 
@@ -117,20 +116,41 @@ function setup() {
     palette = colArr;
     background(bgcolor);
 
-    for (z = 0; z < 4; z++) { lgr.push(R.random_choice([0, w]));}
-
     setGradCols();
+
+    setGrad(createVector(0, 0), w);
     
-    if (tkid % 3 == 0) createLgradient(cl1, cl2);
-    else if (tkid % 2 == 0) nsFilter();
+    //if (tkid % 3 == 0) setGrad(createVector(0, 0), w);
+    //else if (tkid % 2 == 0) nsFilter();
 
     noLoop();
     makeTl();
 }
 
 function setGradCols() {
-    cl1 = R.random_choice(paleta)[R.random_int(0, 9)];
-    cl2 = R.random_choice(paleta)[R.random_int(0, 9)];
+    if (arrColGrad.length > 0) arrColGrad.length=0;
+    for (let st = 0; st <= 1.0; st += 0.5) { arrColGrad.push(genColor(0)); }
+}
+
+function genColor(scl) {
+    let tmp = color(R.random_choice(paleta)[R.random_int(0, 9)]);
+    mCol = color(hue(tmp) + R.random_num(-1.99, 1.99) * scl,
+        saturation(tmp) + R.random_num(-1.99, 1.99) * scl,
+        brightness(tmp) + R.random_num(-1.99, 1.99) * scl,
+        R.random_num(10, 50));
+    return mCol;
+}
+
+function setGrad(pos, rad) {
+    noStroke();
+    let q = 0;
+    grad = drawingContext.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, rad);
+    for (let step = 0; step <= 1.0; step += 0.5) {
+        grad.addColorStop(step, arrColGrad[q]);
+        q++;
+    }
+    drawingContext.fillStyle = grad;
+    square(0, 0, w);
 }
 
 function centerCanvas() {
@@ -143,8 +163,9 @@ function keyPressed() {
         chcol=true;
     }
     if (key == 'b') {
-        if (tkid % 3 == 0) setGradCols();
-        else bgcolor = R.random_choice(bgcols);
+        //if (tkid % 3 == 0) setGradCols();
+        //else bgcolor = R.random_choice(bgcols);
+        setGradCols();
     }
 }
 
@@ -187,7 +208,7 @@ function genTokenData(projectNum) {
 function makeTl() {
 
     //xinc = 5;
-    strk = 0.85;
+    //strk = 0.85;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -314,23 +335,28 @@ function shape(ph, seed, n, np, stk) {
         let r1 = (w / rdd1) + sin(i * 10 + ph) * rdd2;
         t += seed;
         switch (true) {
-            case (stk >= 0.84):
-                //x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
-                x = 166  * sin((s - t * 17.7) * 0.000375)/r1;
+            case (stk >= 0.89):
+                x = 166 * sin((s - t * 17.7) * 0.000375);
                 break;
-            case (stk >= 0.71):
+            case (stk >= 0.78):
+                x = 166 * sin((s - t * 17.7) * 0.000375) / r1;
+                break;
+            case (stk >= 0.67):
+                x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
+                break;
+            case (stk >= 0.56):
                 x = (w / 10) + r1 * sin(map(i, 0, i - 1, 0, pitau)) * sin(t);
                 break;
-            case (stk >= 0.57):
+            case (stk >= 0.45):
                 x = cos(radians(i * 10)) * r1
                 break;
-            case (stk >= 0.43):
+            case (stk >= 0.34):
                 x = sin(frameCount / 10) * r1
                 break;
-            case (stk >= 0.29):
+            case (stk >= 0.23):
                 x = cos(t - frameCount * 3) * r1;
                 break;
-            case (stk >= 0.15):
+            case (stk >= 0.12):
                 x = sin(t) * (i / 100) * r1;
                 break;
             default:
@@ -456,8 +482,8 @@ function shape(ph, seed, n, np, stk) {
 
 function draw() {
 
-    background(bgcolor);
     img.clear();
+    //clear();
 
     let delay = 0;
     cshapes.forEach(function (cs) {
@@ -480,21 +506,15 @@ function draw() {
     });
     chcol = false;
 
-    if (tkid % 3 == 0) createLgradient(cl1, cl2);
-    else if (tkid % 2 == 0) image(noiseFilter, 0, 0);
+    setGrad(createVector(0, 0), w);
+
+    /*if (tkid % 3 == 0) { setGrad(createVector(0, 0), w); }
+    else if (tkid % 2 == 0) { background(bgcolor); image(noiseFilter, 0, 0); }
+    else { background(bgcolor);}*/
 
     imgClone = img.get();
     image(imgClone, 0, 0);
     
-}
-
-function createLgradient(col1, col2){
-    noStroke();
-    let grbg = drawingContext.createLinearGradient(lgr[0], lgr[1], lgr[2], lgr[3]);
-    grbg.addColorStop(0, col1);
-    grbg.addColorStop(1, col2);
-    drawingContext.fillStyle = grbg;
-    rect(0, 0, w, w);
 }
 
 function lerpColorScheme(n, colors, alph) {
