@@ -490,6 +490,7 @@ function draw() {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
         if (frameCount % 160 == 0) {
             cs.changeStrk(true);
+            clear();
             if (cs.getStk() == strk) {
                 if (itemsTime[cshapes.indexOf(cs)]) clearTimeout(itemsTime[cshapes.indexOf(cs)]);
             } else {
