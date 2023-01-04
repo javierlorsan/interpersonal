@@ -482,7 +482,7 @@ function shape(ph, seed, n, np, stk) {
 
 function draw() {
 
-    img.clear();
+    
     //clear();
 
     let delay = 0;
@@ -490,7 +490,6 @@ function draw() {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
         if (frameCount % 160 == 0) {
             cs.changeStrk(true);
-            clear();
             if (cs.getStk() == strk) {
                 if (itemsTime[cshapes.indexOf(cs)]) clearTimeout(itemsTime[cshapes.indexOf(cs)]);
             } else {
@@ -512,10 +511,10 @@ function draw() {
     /*if (tkid % 3 == 0) { setGrad(createVector(0, 0), w); }
     else if (tkid % 2 == 0) { background(bgcolor); image(noiseFilter, 0, 0); }
     else { background(bgcolor);}*/
-
+    
     imgClone = img.get();
     image(imgClone, 0, 0);
-    
+    img.clear();
 }
 
 function lerpColorScheme(n, colors, alph) {
