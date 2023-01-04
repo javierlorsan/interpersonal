@@ -481,9 +481,8 @@ function shape(ph, seed, n, np, stk) {
 }
 
 function draw() {
-
     
-    //clear();
+    img.clear();
 
     let delay = 0;
     cshapes.forEach(function (cs) {
@@ -506,15 +505,17 @@ function draw() {
     });
     chcol = false;
 
+    if (tkid % 3 == 0) clear();
+
     setGrad(createVector(0, 0), w);
 
-    /*if (tkid % 3 == 0) { setGrad(createVector(0, 0), w); }
+    /*if (tkid % 3 == 0) { img.clear(); setGrad(createVector(0, 0), w); }
     else if (tkid % 2 == 0) { background(bgcolor); image(noiseFilter, 0, 0); }
     else { background(bgcolor);}*/
     
     imgClone = img.get();
     image(imgClone, 0, 0);
-    img.clear();
+    
 }
 
 function lerpColorScheme(n, colors, alph) {
