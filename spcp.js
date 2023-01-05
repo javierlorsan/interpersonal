@@ -66,6 +66,7 @@ let palette;
 let tokenData = genTokenData(448);
 let noiseScale = 9e-11;
 let bgcols = ['#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', '#03071e', '#212529', '#081c15', '#EDF5FC', '#090B0B', '#121616', '#E9EDED', '#250902', '#43291f'];
+let colores = ["#f2eb8a", "#fed000", "#fc8405", "#ed361a", "#e2f0f3", "#b3dce0", "#4464a1", "#203051", "#ffc5c7", "#f398c3", "#cf3895", "#6d358a", "#06b4b0", "#4b8a5f", '#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', '#03071e', '#212529', '#081c15', '#EDF5FC', '#090B0B', '#121616', '#E9EDED', '#250902', '#43291f'];
 let tkid = tokenData.tokenId;
 let seed = parseInt(tokenData.hash.slice(0, 16), 16)
 let R = new Random(seed);
@@ -124,12 +125,10 @@ function setup() {
     setGradCols();
 
     setGrad(createVector(0, 0), w);
-    
-    //if (tkid % 3 == 0) setGrad(createVector(0, 0), w);
-    //else if (tkid % 2 == 0) nsFilter();
+
+    makeTl();
 
     noLoop();
-    makeTl();
 }
 
 function setGradCols() {
@@ -138,12 +137,13 @@ function setGradCols() {
 }
 
 function genColor(scl) {
-    let tmp = color(R.random_choice(paleta)[R.random_int(0, 9)]);
-    mCol = color(hue(tmp) + R.random_num(-2, 2) * scl,
+    //let tmp = color(R.random_choice(paleta)[R.random_int(0, 9)]);
+    let tmp = R.random_choice(colores) + R.random_int(50, 90);
+    /*mCol = color(hue(tmp) + R.random_num(-2, 2) * scl,
         saturation(tmp) + R.random_num(-2, 2) * scl,
         brightness(tmp) + R.random_num(-2, 2) * scl,
-        R.random_num(90, 150));
-    return mCol;
+        R.random_num(90, 150));*/
+    return tmp;
 }
 
 function setGrad(pos, rad) {
@@ -152,8 +152,8 @@ function setGrad(pos, rad) {
     noStroke();
     let q = 0;
     let radius = w / 2;
-    if (tkid % 3 == 0) grad = drawingContext.createRadialGradient(-radius, radius - grdStart, grdStart, -radius, -radius, rad);
-    else if (tkid % 2 == 0) grad = drawingContext.createRadialGradient(-radius + grdStart, -radius + grdStart, grdStart, pos.x, pos.y, rad);
+    if (tkid % 5 == 0) grad = drawingContext.createRadialGradient(-radius, radius - grdStart, grdStart, -radius, -radius, rad);
+    else if (tkid % 3 == 0) grad = drawingContext.createRadialGradient(-radius + grdStart, -radius + grdStart, grdStart, pos.x, pos.y, rad);
     else grad = drawingContext.createRadialGradient(gx1, gy1, grdStart, gx2, gy2, rad);
     for (let step = 0; step <= 1.0; step += 0.5) {
         grad.addColorStop(step, arrColGrad[q]);
@@ -174,8 +174,6 @@ function keyPressed() {
         chcol=true;
     }
     if (key == 'b') {
-        //if (tkid % 3 == 0) setGradCols();
-        //else bgcolor = R.random_choice(bgcols);
         setGradCols();
     }
 }
@@ -218,7 +216,7 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 5;
+    xinc = 3;
     //strk = 0.85;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
@@ -519,14 +517,10 @@ function draw() {
     //if (tkid % 3 == 0) clear();
 
     setGrad(createVector(0, 0), w);
-
-    /*if (tkid % 3 == 0) { img.clear(); setGrad(createVector(0, 0), w); }
-    else if (tkid % 2 == 0) { background(bgcolor); image(noiseFilter, 0, 0); }
-    else { background(bgcolor);}*/
     
     imgClone = img.get();
     image(imgClone, 0, 0);
-    
+
 }
 
 function lerpColorScheme(n, colors, alph) {
