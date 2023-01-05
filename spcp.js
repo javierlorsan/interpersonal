@@ -57,7 +57,6 @@ let shm = [0.7, 1.1, 1.6, 17.75004, 1.8, 30.26399999999995, 10.420999999999824, 
 let shmg = [10.082975, 26.179999999999435, 0.9, 11.20497, 8.3, 10, 10.00859999999998, 10.08299999999996, 10.087999999999957, 10.22899999999993, 11.519999999999802, 13.919999999999954, 14.9, 2.5, 2.6, 25.215, 25.219, 26.528999999999993, 28.818999999999537, -3.3, 30.36899999999993, 34.024000000000456];
 let shp = [18.570000000000075, 0.2, 11.3669, 1.2, 30.2639, 1.3, -1.3, 10.471999999999795, 11.366999999999887, 11.39699999999987, 11.9, 12.559999999999983, 14.2, 14.279999999999946, 14.28, 18.1, 30.15899999999997, 31.428999999999718, 5.1, -5.55, 6.1, -6.5555];
 let shmp = [18.85000000000012, 18.879, 25.13, 25.131, 25.1312, 25.1313, 31.4282, 12.559999999999982, 31.428999999999717];
-let colores = ["#f2eb8a", "#fed000", "#fc8405", "#ed361a", "#e2f0f3", "#b3dce0", "#4464a1", "#203051", "#ffc5c7", "#f398c3", "#cf3895", "#6d358a", "#06b4b0", "#4b8a5f"];
 let steps = shg.concat(shm, shmg, shp, shmp);
 let img;
 let WIDTH = window.innerWidth;
@@ -94,7 +93,11 @@ let dly = 3;
 let itemsTime = [];
 let noiseFilter;
 let arrColGrad = [];
-let grdStart = R.random_int(0, w / 3);
+let grdStart = R.random_int(0, w / 5);
+let gx1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
+let gy1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
+let gx2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
+let gy2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
 
 function setup() {
 
@@ -144,16 +147,21 @@ function genColor(scl) {
 }
 
 function setGrad(pos, rad) {
+    push();
+    translate(w / 2, w / 2);
     noStroke();
     let q = 0;
-    console.log(grdStart);
-    grad = drawingContext.createRadialGradient(pos.x + grdStart, pos.y + grdStart, grdStart, pos.x, pos.y, rad);
+    let radius = w / 2;
+    if (tkid % 3 == 0) grad = drawingContext.createRadialGradient(-radius, radius - grdStart, grdStart, -radius, -radius, rad);
+    else if (tkid % 2 == 0) grad = drawingContext.createRadialGradient(-radius + grdStart, -radius + grdStart, grdStart, pos.x, pos.y, rad);
+    else grad = drawingContext.createRadialGradient(gx1, gy1, grdStart, gx2, gy2, rad);
     for (let step = 0; step <= 1.0; step += 0.5) {
         grad.addColorStop(step, arrColGrad[q]);
         q++;
     }
     drawingContext.fillStyle = grad;
-    square(0, 0, w);
+    square(-radius, -radius, w);
+    pop();
 }
 
 function centerCanvas() {
@@ -508,7 +516,7 @@ function draw() {
     });
     chcol = false;
 
-    if (tkid % 3 == 0) clear();
+    //if (tkid % 3 == 0) clear();
 
     setGrad(createVector(0, 0), w);
 
