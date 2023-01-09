@@ -92,7 +92,6 @@ let mxmn = 3.5;
 let chcol = false;
 let dly = 3;
 let itemsTime = [];
-let noiseFilter;
 let arrColGrad = [];
 let grdStart = R.random_int(0, w / 5);
 let gx1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
@@ -133,18 +132,17 @@ function setup() {
 
 function setGradCols() {
     if (arrColGrad.length > 0) arrColGrad.length=0;
-    for (let st = 0; st <= 1.0; st += 0.5) { arrColGrad.push(genColor(0)); }
+    for (let st = 0; st <= 1.0; st += 0.5) { arrColGrad.push(R.random_choice(colores) + R.random_int(50, 90)); }
 }
 
-function genColor(scl) {
-    //let tmp = color(R.random_choice(paleta)[R.random_int(0, 9)]);
+ /*function genColor(scl) {
     let tmp = R.random_choice(colores) + R.random_int(50, 90);
-    /*mCol = color(hue(tmp) + R.random_num(-2, 2) * scl,
+    mCol = color(hue(tmp) + R.random_num(-2, 2) * scl,
         saturation(tmp) + R.random_num(-2, 2) * scl,
         brightness(tmp) + R.random_num(-2, 2) * scl,
-        R.random_num(90, 150));*/
+        R.random_num(90, 150));
     return tmp;
-}
+}*/
 
 function setGrad(pos, rad) {
     push();
@@ -178,21 +176,6 @@ function keyPressed() {
     }
 }
 
-function nsFilter() {
-
-    noiseFilter = createImage(w, w);
-    noiseFilter.loadPixels();
-    let pixeli3 = R.random_int(10, 50);
-    let pix = noiseFilter.width * noiseFilter.height * 4;
-    for (let i = 0; i < pix; i += 4) {
-        noiseFilter.pixels[i] = random(255);
-        noiseFilter.pixels[i + 1] = random(255);
-        noiseFilter.pixels[i + 2] = random(255);
-        noiseFilter.pixels[i + 3] = pixeli3;
-    }
-    noiseFilter.updatePixels();
-}
-
 function mouseClicked() {
     if (mot) {
         mot = false;
@@ -216,8 +199,8 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 3;
-    //strk = 0.85;
+    //xinc = 4;
+    strk = 0.9;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -345,7 +328,13 @@ function shape(ph, seed, n, np, stk) {
         t += seed;
         switch (true) {
             case (stk >= 0.89):
-                x = 166 * sin((s - t * 17.7) * 0.000375);
+                //x = 166 * sin((s - t * 17.7) * 0.000375);
+                let deg = millis() / 3.5 + i * 115;
+                let mrad = radians(deg);
+                let png = tan(mrad);
+                let r = map(png, -1.0, 1.0, 25.4, 620.0);
+                let rad = radians(i) * r1;
+                x = w/10 + sin(rad) * r;
                 break;
             case (stk >= 0.78):
                 x = 166 * sin((s - t * 17.7) * 0.000375) / r1;
