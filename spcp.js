@@ -200,7 +200,7 @@ function genTokenData(projectNum) {
 function makeTl() {
 
     //xinc = 4;
-    strk = 0.9;
+    //strk = 0.9;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -327,34 +327,35 @@ function shape(ph, seed, n, np, stk) {
         let r1 = (w / rdd1) + sin(i * 10 + ph) * rdd2;
         t += seed;
         switch (true) {
-            case (stk >= 0.89):
-                //x = 166 * sin((s - t * 17.7) * 0.000375);
-                let deg = millis() / 3.5 + i * 115;
+            case (stk >= 0.9):
+                let deg = s / 3.5 + i * 115;
                 let mrad = radians(deg);
                 let png = tan(mrad);
                 let r = map(png, -1.0, 1.0, 25.4, 620.0);
                 let rad = radians(i) * r1;
-                x = w/10 + sin(rad) * r;
+                x = w / 10 + sin(rad) * r;
+            case (stk >= 0.8):
+                x = 166 * sin((s - t * 17.7) * 0.000375);
                 break;
-            case (stk >= 0.78):
+            case (stk >= 0.7):
                 x = 166 * sin((s - t * 17.7) * 0.000375) / r1;
                 break;
-            case (stk >= 0.67):
+            case (stk >= 0.6):
                 x = 106 + 150 * sin((s - i * 97.7) * 0.000375);
                 break;
-            case (stk >= 0.56):
+            case (stk >= 0.5):
                 x = (w / 10) + r1 * sin(map(i, 0, i - 1, 0, pitau)) * sin(t);
                 break;
-            case (stk >= 0.45):
+            case (stk >= 0.4):
                 x = cos(radians(i * 10)) * r1
                 break;
-            case (stk >= 0.34):
+            case (stk >= 0.3):
                 x = sin(frameCount / 10) * r1
                 break;
-            case (stk >= 0.23):
+            case (stk >= 0.2):
                 x = cos(t - frameCount * 3) * r1;
                 break;
-            case (stk >= 0.12):
+            case (stk >= 0.1):
                 x = sin(t) * (i / 100) * r1;
                 break;
             default:
