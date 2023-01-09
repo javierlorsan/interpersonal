@@ -334,6 +334,7 @@ function shape(ph, seed, n, np, stk) {
                 let r = map(png, -1.0, 1.0, 25.4, 620.0);
                 let rad = radians(i) * r1;
                 x = w / 10 + sin(rad) * r;
+                break;
             case (stk >= 0.8):
                 x = 166 * sin((s - t * 17.7) * 0.000375);
                 break;
