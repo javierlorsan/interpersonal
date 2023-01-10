@@ -77,7 +77,7 @@ let w = sz;
 let mot = false;
 let bgcolor = R.random_choice(bgcols);
 let pntcur = R.random_dec();
-let nrot = R.random_int(5, 25);
+let nrot = R.random_int(2, 19);
 let t = 0;
 let rdd1 = R.random_int(10, 90);//R.random_int(10,128);//R.random_choice([8, 16, 32, 64, 128]);
 let rdd2 = R.random_int(90, 160);//R.random_int(10, 90);//R.random_choice([10, 20, 30, 40, 50, 60, 70, 80, 90]);
@@ -192,8 +192,8 @@ function genTokenData(projectNum) {
     for (var i = 0; i < 64; i++) {
         hash += Math.floor(Math.random() * 16).toString(16);
     }
-    data.hash = hash; //'0xa047e4e884341d34a6a082d04e5cba6ce086b60a1e3de13a0db775c3cb048b9a';
-    data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString(); //448000745
+    data.hash = hash //'0xc4c76377de7c5888d61a63781d9a80e482ef704a0348334b0db87f78f3d69205';
+    data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString(); //448000280;
     return data;
 }
 
@@ -322,8 +322,9 @@ function shape(ph, seed, n, np, stk) {
     let x;
     let pitau = (pntcur < 0.5) ? PI : TAU;
     let s = millis();
-    img.rotate(pitau / nrot);
+    //img.rotate(pitau / nrot);    
     for (let i = 0; i < sp5r; i += shp5for) {
+        img.rotate(pitau / nrot);
         let r1 = (w / rdd1) + sin(i * 10 + ph) * rdd2;
         t += seed;
         switch (true) {
@@ -371,8 +372,6 @@ function shape(ph, seed, n, np, stk) {
                 break;
             case (xinc == 1):
                 img.strokeWeight(lnth);
-                //if (inph <= 1.4 && inph >= -1.4) img.line(x*ph, i * 2, x, i * 3);
-                //else img.line(x, i * 2.5, x, i * 3);
                 img.line(x, i * 2.5, x, i * 3);
                 break;
             case (xinc == 2):
