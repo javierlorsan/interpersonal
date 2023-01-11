@@ -413,7 +413,12 @@ function shape(ph, seed, n, np, stk, col) {
                     if (inph <= 1 && inph >= -1) { img.strokeWeight(rdinc); img.rect(x * ph, i * 2.5, 3, 11); }
                     else { img.rect(x, i * 2.5, 5, 15); }
                 }
-                else { img.stroke(colaux); img.strokeWeight(rdinc); img.point(x * (ph * 2), i / ph); }
+                else {
+                    img.stroke(colaux); img.strokeWeight(rdinc);
+                    if (n % 2 == 0) {
+                        img.point(x * (ph * 2), -i / ph);
+                    } else { img.point(x / (ph * 2), i * ph);}
+                }
                 break;
             case (xinc == 11):
                 img.strokeWeight(lnth);
