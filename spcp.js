@@ -65,7 +65,6 @@ let sz = Math.min(WIDTH, HEIGHT);
 let palette;
 let tokenData = genTokenData(448);
 let noiseScale = 9e-11;
-let bgcols = ['#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', '#03071e', '#212529', '#081c15', '#EDF5FC', '#090B0B', '#121616', '#E9EDED', '#250902', '#43291f'];
 let colores = ["#f2eb8a", "#fed000", "#fc8405", "#ed361a", "#e2f0f3", "#b3dce0", "#4464a1", "#203051", "#ffc5c7", "#f398c3", "#cf3895", "#6d358a", "#06b4b0", "#4b8a5f", '#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', '#03071e', '#212529', '#081c15', '#EDF5FC', '#090B0B', '#121616', '#E9EDED', '#250902', '#43291f'];
 let tkid = tokenData.tokenId;
 let seed = parseInt(tokenData.hash.slice(0, 16), 16)
@@ -75,7 +74,7 @@ let inph = R.random_num(-2.7, 2.7);
 let cshapes = [];
 let w = sz;
 let mot = false;
-let bgcolor = R.random_choice(bgcols);
+let bgcolor = R.random_choice(colores);
 let pntcur = R.random_dec();
 let nrot = R.random_int(2, 19);
 let t = 0;
@@ -98,6 +97,7 @@ let gx1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
 let gy1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
 let gx2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
 let gy2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
+let colaux = R.random_choice(paleta)[R.random_int(0, 9)];
 
 function setup() {
 
@@ -135,15 +135,6 @@ function setGradCols() {
     for (let st = 0; st <= 1.0; st += 0.5) { arrColGrad.push(R.random_choice(colores) + R.random_int(50, 90)); }
 }
 
- /*function genColor(scl) {
-    let tmp = R.random_choice(colores) + R.random_int(50, 90);
-    mCol = color(hue(tmp) + R.random_num(-2, 2) * scl,
-        saturation(tmp) + R.random_num(-2, 2) * scl,
-        brightness(tmp) + R.random_num(-2, 2) * scl,
-        R.random_num(90, 150));
-    return tmp;
-}*/
-
 function setGrad(pos, rad) {
     push();
     translate(w / 2, w / 2);
@@ -169,7 +160,8 @@ function centerCanvas() {
 
 function keyPressed() {
     if (key == 'c') {
-        chcol=true;
+        chcol = true;
+        colaux = R.random_choice(paleta)[R.random_int(0, 9)];
     }
     if (key == 'b') {
         setGradCols();
@@ -199,9 +191,10 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 4;
+    xinc = 10;
     //strk = 0.9;
     //shp5for = 3;
+    //nrot = 4;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -300,7 +293,7 @@ class cshape {
             if (this.n == 0) { mxmn = R.random_int(4, 6); strk = Math.random().toFixed(2); console.log(strk + ' - ' + frameCount);}
         }
 
-        shape(this.ph, this.rseed, this.n, this.np, this.stk);
+        shape(this.ph, this.rseed, this.n, this.np, this.stk, this.col);
         if (this.inde == 'des') { this.ph -= 0.05; } else { this.ph += 0.05 }
 
         if (this.ph >= mxmn) this.inde = 'des'
@@ -319,7 +312,7 @@ class cshape {
 }
 
 
-function shape(ph, seed, n, np, stk) {
+function shape(ph, seed, n, np, stk, col) {
     let x;
     let pitau = PI; //(pntcur < 0.5) ? PI : TAU;
     let s = millis();
@@ -415,14 +408,22 @@ function shape(ph, seed, n, np, stk) {
             case (xinc == 10):
                 img.strokeWeight(lnth);
                 img.noFill();
-                if (inph <= 1 && inph >= -1) img.rect(x * ph, i * 2.5, 5, 15);
-                else img.rect(x, i * 2.5, 5, 15);
+                img.stroke(col);
+                if (n >= np / 2) {
+                    if (inph <= 1 && inph >= -1) { img.strokeWeight(rdinc); img.rect(x * ph, i * 2.5, 3, 11); }
+                    else { img.rect(x, i * 2.5, 5, 15); }
+                }
+                else { img.stroke(colaux); img.strokeWeight(rdinc); img.point(x * (ph * 2), i / ph); }
                 break;
             case (xinc == 11):
                 img.strokeWeight(lnth);
                 img.noFill();
-                if (inph <= 1 && inph >= -1) img.rect(x * ph, i * 2.5, 15, 5);
-                else img.rect(x, i * 2.5, 15, 5);
+                img.stroke(col);
+                if (n > np / 2) {
+                    if (inph <= 1 && inph >= -1) img.rect(x * ph, i * 2.5, 15, 5);
+                    else img.rect(x, i * 2.5, 15, 5);
+                }
+                else { img.stroke(colaux); img.circle(i * (ph * 2), x / ph, rdinc1);}
                 break;
             case (xinc == 12):
                 img.strokeWeight(lnth);
