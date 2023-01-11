@@ -84,10 +84,10 @@ let rdd2 = R.random_int(90, 160);//R.random_int(10, 90);//R.random_choice([10, 2
 let rdinc = R.random_int(3, 8);
 let rdinc1 = R.random_int(4, 7);
 let rdiv = R.random_choice([1, 2]);
-let sp5r = R.random_int(85, 120);
+let sp5r = R.random_int(90, 130);
 let strk = R.random_dec();
 let lnth = (strk > 0.2) ? strk : 0.5;
-let shp5for = R.random_choice([5, 10, 15, 20]);
+let shp5for = R.random_int(3, 9);
 let mxmn = 3.5;
 let chcol = false;
 let dly = 3;
@@ -201,6 +201,7 @@ function makeTl() {
 
     //xinc = 4;
     //strk = 0.9;
+    //shp5for = 3;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let alph = R.random_int(75, 255);
@@ -229,7 +230,7 @@ function makeTl() {
     else if (npoints <= 1000) { dly = 7; }
     else if (npoints <= 1250) { dly = 5; }
 
-    console.log(' inph: ' + inph + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
+    console.log(' sp5r: ' + sp5r + ' shp5for: ' + shp5for + ' - step:' + tp + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - strk:' + strk + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
     for (let i = 0; i < npoints - 1; i++) {
         let size = map((i / mapP) ** 0.8, 0, 1, sz * fr, 0);
@@ -320,7 +321,7 @@ class cshape {
 
 function shape(ph, seed, n, np, stk) {
     let x;
-    let pitau = (pntcur < 0.5) ? PI : TAU;
+    let pitau = PI; //(pntcur < 0.5) ? PI : TAU;
     let s = millis();
     //img.rotate(pitau / nrot);    
     for (let i = 0; i < sp5r; i += shp5for) {
