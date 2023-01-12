@@ -84,7 +84,7 @@ let rdinc = R.random_int(3, 8);
 let rdinc1 = R.random_int(4, 7);
 let rdiv = R.random_choice([1, 2]);
 let sp5r = R.random_int(90, 130);
-let strk = R.random_dec();
+let strk = R.random_int(0,9)/10;
 let lnth = (strk > 0.2) ? strk : 0.5;
 let shp5for = R.random_int(3, 9);
 let mxmn = 3.5;
@@ -98,6 +98,7 @@ let gy1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
 let gx2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
 let gy2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
 let colaux = R.random_choice(paleta)[R.random_int(0, 9)];
+let colaux2 = R.random_choice(paleta)[R.random_int(0, 9)];
 
 function setup() {
 
@@ -162,6 +163,7 @@ function keyPressed() {
     if (key == 'c') {
         chcol = true;
         colaux = R.random_choice(paleta)[R.random_int(0, 9)];
+        colaux2 = R.random_choice(paleta)[R.random_int(0, 9)];
     }
     if (key == 'b') {
         setGradCols();
@@ -184,14 +186,14 @@ function genTokenData(projectNum) {
     for (var i = 0; i < 64; i++) {
         hash += Math.floor(Math.random() * 16).toString(16);
     }
-    data.hash = hash //'0xc4c76377de7c5888d61a63781d9a80e482ef704a0348334b0db87f78f3d69205';
-    data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString(); //448000280;
+    data.hash = hash; '0xac5feecf28630ba38f1f74e5bb77c00022eb7fedbf5891bd7487ac4dee4b6f78';
+    data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString(); //448000331;
     return data;
 }
 
 function makeTl() {
 
-    xinc = 10;
+    xinc = 13;
     //strk = 0.9;
     //shp5for = 3;
     //nrot = 4;
@@ -290,7 +292,7 @@ class cshape {
         img.stroke(this.col);
 
         if (this.chstrk) {
-            if (this.n == 0) { mxmn = R.random_int(4, 6); strk = Math.random().toFixed(2); console.log(strk + ' - ' + frameCount);}
+            if (this.n == 0) { mxmn = R.random_int(4, 6); strk = psdRandom(); console.log(strk + ' - ' + frameCount);}
         }
 
         shape(this.ph, this.rseed, this.n, this.np, this.stk, this.col);
@@ -309,6 +311,17 @@ class cshape {
 
 
     init() {}
+}
+
+function psdRandom() {
+
+    let newR = Math.floor(Math.random() * 10) / 10;
+
+    do {
+        newR = Math.floor(Math.random() * 10) / 10;
+    } while (newR == strk)
+
+    return newR;
 }
 
 
@@ -366,7 +379,16 @@ function shape(ph, seed, n, np, stk, col) {
                 break;
             case (xinc == 1):
                 img.strokeWeight(lnth);
-                img.line(x, i * 2.5, x, i * 3);
+                img.noFill();
+                if (n < np / 3) {
+                    img.stroke(colaux);
+                    if (inph <= 1.35 && inph >= -1.35) img.rect(x * ph, i, 15, 5);
+                    else img.rect(x/ph, i * 2.5, 15, 5);
+                }
+                else {
+                    img.stroke(col);
+                    img.line(x, i * 2.5, x, i * 3);
+                }
                 break;
             case (xinc == 2):
                 img.strokeWeight(lnth);
@@ -435,60 +457,20 @@ function shape(ph, seed, n, np, stk, col) {
                 img.noFill();
                 img.arc(x * 1.5, i*ph, x * 2, i, 0 + ph, PI / 4 + ph);
                 break;
-            //if (inph >= -1.5 && inph <= 1.5) img.line(x * 2, i * ph, x, i * ph);
-            //case (xinc == 18):
-            //    img.strokeWeight(lnth);
-            //    img.line(x, i * 2, x * ph, i * 3);
-            //    break;
-            //else img.line(x * 2, i * ph, x, i * 2);
-            //case (xinc == 0):
-                //img.strokeWeight(lnth);
-                //if (inph <= 1.2 && inph >= -1.2) img.line(x * ph, i, x * ph, i * 2);
-                //else img.line(x * 2, i, x * ph, i * 2);
-                //img.line(x * 2, i, x * ph, i * 2);
-                //break;
-            //case (xinc == 1):
-            //    img.strokeWeight(lnth);
-            //    img.line(x, i * ph, x * 2, i);
-            //    break;
-            //case (xinc == 15):
-            //    img.strokeWeight(lnth);
-            //    img.line(x, i, x * 2, i * ph);
-            //    break;
-            //case (xinc == 1):
-            //    img.strokeWeight(lnth);
-            //    img.line(x * 2.2, i, x * 2, i);
-            //    break;
-            //case (xinc == 16):
-            //    img.strokeWeight(lnth);
-            //    img.line(x * 2.2, i, x * 2, i*ph);
-            //    break;
-            //case (xinc == 17):
-            //    img.strokeWeight(lnth);
-            //    img.line(x * 2.2, i * ph, x * 2, i);
-            //    break;
-            //case (xinc == 12):
-            //    img.strokeWeight(lnth);
-            //    img.noFill();
-            //    img.arc(x, i * 2, x, i * 3, 0 + ph, PI / 4 + ph);
-            //    break;
-            //case (xinc == 13):
-            //    img.strokeWeight(lnth);
-            //    img.noFill();
-            //    img.arc(x, i * 2.5, x-ph, i * 3, PI - (ph * 0.8), TWO_PI * 0.7 - ph);
-            //    break;
-            //default:
-            //    img.strokeWeight(lnth);
-            //    img.noFill();
-            //    img.arc(x * 2, i, x * 2, i * ph, PI - (ph * 0.8), TWO_PI * 0.7 - ph);
-            //    break;
+            case (xinc == 13):
+                img.strokeWeight(lnth);
+                img.noFill();
+                if (n > np * 0.9) { img.stroke(col); img.line(x*ph, i, x, i * 1.5); }
+                else if (n > np * 0.45) { img.stroke(colaux); img.circle(x * 2.5, i * ph, rdinc1); }
+                else { img.stroke(colaux2); img.rect(x*ph, i * 2.5, 5, 15); }
+                break;
         }
     }
 }
 
 function draw() {
     
-    img.clear();
+    //img.clear();
 
     let delay = 0;
     cshapes.forEach(function (cs) {
