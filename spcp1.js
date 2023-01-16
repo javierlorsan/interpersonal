@@ -76,7 +76,7 @@ let w = sz;
 let mot = true;
 let bgcolor = R.random_choice(colores);
 let pntcur = R.random_dec();
-let nrot = R.random_int(2, 4);
+let nrot = R.random_int(2, 3);
 let t = 0;
 let rdd1 = R.random_int(10, 90);
 let rdd2 = R.random_int(90, 160);
@@ -162,18 +162,6 @@ function centerCanvas() {
     e.display = "flex", e.height = "100vh", e.alignItems = "center", e.justifyContent = "center"
 }
 
-/*function keyPressed() {
-    if (key == 'c') {
-        chcol = true;
-        colaux = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
-        colaux2 = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
-        trcol -= 20;
-    }
-    if (key == 'b') {
-        setGradCols();
-    }
-}*/
-
 function mouseClicked() {
 
     if (frameCount < 120) {
@@ -200,9 +188,9 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 12;
-    //strk = 0.1;
-    //nrot = 2;
+    //xinc = 3;
+    //strk = 0.7;
+    //nrot = 3;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let npoints = R.random_int(500, 1000);
@@ -227,13 +215,16 @@ function makeTl() {
             xinc = R.random_choice([0, 2, 7]);
             break;
         case (strk == 0.4):
-            xinc = R.random_choice([0, 2, 3, 4, 7, 12]);
+            xinc = R.random_choice([0, 2, 3, 7, 12]);
             break;
         case (strk == 0.5):
             xinc = R.random_choice([0, 3, 9, 10, 11, 12]);
             break;
         case (strk == 0.6):
-            xinc = R.random_choice([0, 1, 2, 3, 4, 7, 9, 10, 11, 12]);
+            xinc = R.random_choice([0, 1, 2, 3, 4, 7, 9, 11, 12]);
+            break;
+        case (strk == 0):
+            xinc = R.random_choice([3, 11, 12]);
             break;
     }
 
@@ -493,7 +484,6 @@ function draw() {
         alph = R.random_int(trph - 40, trph)
         trph -= 40;
         trcol -= 20;
-        console.log(trph);
     }
     cshapes.forEach(function (cs) {
         if (chcol) cs.changeCol(true); else cs.changeCol(false);
