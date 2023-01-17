@@ -102,6 +102,7 @@ let colaux2 = R.random_choice(paleta)[R.random_int(0, 9)];
 let trcol = 80;
 let alph = R.random_int(150, 175);
 let trph = 150;
+let lrpcol = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(80,100);
 
 function setup() {
 
@@ -285,7 +286,7 @@ class cshape {
         this.x = x;
         this.y = y;
         this.rseed = seed;
-        this.col = color;
+        this.col = lrpcol;
         this.sz = size;
         this.ang = 0;
         this.n = n;
@@ -302,9 +303,9 @@ class cshape {
         if (this.chcol) {
             if (this.n == 0) { palette = getNewPal(); }
             if (floor(this.x / this.sz * this.n) % 2 == 0) {
-                this.col = lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette.reverse());
+                this.col = lrpcol;//lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette.reverse());
             } else {
-                this.col = lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette);
+                this.col = lrpcol;//lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette);
             }
         }
 
@@ -479,6 +480,7 @@ function draw() {
     }
     if (frameCount % 30 == 0) {
         chcol = true;
+        lrpcol = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol - 10);
         colaux = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
         colaux2 = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
         alph = R.random_int(trph - 30, trph)
