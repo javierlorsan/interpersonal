@@ -84,7 +84,7 @@ let rdinc = R.random_int(3, 8);
 let rdinc1 = R.random_int(4, 7);
 let rdiv = R.random_choice([1, 2]);
 let sp5r = R.random_int(90, 130);
-let strk = R.random_int(0, 7) / 10;
+let strk = R.random_choice([0.6, 0.6, 0.1, 0.1, 0.7, 0.7, 0.7, 0.7, 0.5, 0.4, 0.2, 0, 0.3]);
 let lnth = (pntcur > 0.2) ? pntcur : 0.5;
 let shp5for = R.random_int(3, 9);
 let mxmn = 3.5;
@@ -100,8 +100,8 @@ let gy2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
 let colaux = R.random_choice(paleta)[R.random_int(0, 9)];
 let colaux2 = R.random_choice(paleta)[R.random_int(0, 9)];
 let trcol = 80;
-let alph = R.random_int(200, 225);
-let trph = 190;
+let alph = R.random_int(150, 175);
+let trph = 150;
 
 function setup() {
 
@@ -188,9 +188,9 @@ function genTokenData(projectNum) {
 
 function makeTl() {
 
-    //xinc = 3;
-    //strk = 0.7;
-    //nrot = 3;
+    //xinc = 7;
+    //strk = 0.3;
+    nrot = 2;
     let tp = R.random_choice(steps);
     let n = R.random_int(5, 50);
     let npoints = R.random_int(500, 1000);
@@ -204,27 +204,29 @@ function makeTl() {
     let color;
 
     switch (true) {
-
-        case (strk == 0.1):
-            xinc = R.random_choice([0,1, 2, 3, 7, 9, 11, 12]);
-            break;
-        case (strk == 0.2):
-            xinc = R.random_choice([2, 3, 7, 11, 12]);
-            break;
         case (strk == 0.3):
-            xinc = R.random_choice([0, 2, 7]);
-            break;
-        case (strk == 0.4):
-            xinc = R.random_choice([0, 2, 3, 7, 12]);
-            break;
-        case (strk == 0.5):
-            xinc = R.random_choice([0, 3, 9, 10, 11, 12]);
-            break;
-        case (strk == 0.6):
-            xinc = R.random_choice([0, 1, 2, 3, 4, 7, 9, 11, 12]);
+            xinc = R.random_choice([2, 7]);
             break;
         case (strk == 0):
             xinc = R.random_choice([3, 11, 12]);
+            break;
+        case (strk == 0.2):
+            xinc = R.random_choice([2, 3, 11, 12]);
+            break;
+        case (strk == 0.4):
+            xinc = R.random_choice([2, 3, 7, 12]);
+            break;
+        case (strk == 0.5):
+            xinc = R.random_choice([3, 9, 11, 12]);
+            break;
+        case (strk == 0.1):
+            xinc = R.random_choice([1, 2, 3, 7, 9, 11, 12]);
+            break;
+        case (strk == 0.6):
+            xinc = R.random_choice([0, 1, 2, 3, 7, 11, 12]);
+            break;
+        case (strk == 0.7):
+            xinc = R.random_choice([0, 1, 2, 3, 7, 9, 10, 12]);
             break;
     }
 
@@ -253,9 +255,9 @@ function makeTl() {
         y = rd2 * R.random_num(-d, d) / t;
 
         if (floor(x / sz * n) % 2 == 0) {
-            color = lerpColorScheme(curlNoise(x * noiseScale, (y + 0) * noiseScale, 0), palette.reverse(), alph);
+            color = lerpColorScheme(curlNoise(x * noiseScale, (y + 0) * noiseScale, 0), palette.reverse());
         } else {
-            color = lerpColorScheme(curlNoise(x * noiseScale, (y + 0) * noiseScale, 0), palette, alph);
+            color = lerpColorScheme(curlNoise(x * noiseScale, (y + 0) * noiseScale, 0), palette);
         }
         cshapes.push(new cshape(x, y, tp, color, size, i, npoints))
         itemsTime.push(0);
@@ -300,9 +302,9 @@ class cshape {
         if (this.chcol) {
             if (this.n == 0) { palette = getNewPal(); }
             if (floor(this.x / this.sz * this.n) % 2 == 0) {
-                this.col = lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette.reverse(), alph);
+                this.col = lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette.reverse());
             } else {
-                this.col = lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette, alph);
+                this.col = lerpColorScheme(curlNoise(this.x * noiseScale, (this.y + 0) * noiseScale, 0), palette);
             }
         }
 
@@ -452,7 +454,7 @@ function shape(ph, seed, n, np, stk, col) {
                 img.strokeWeight(lnth);
                 img.noFill();
                 img.stroke(col);
-                if (n > np / 2) {
+                if (n < np / 3) {
                     if (inph <= 1 && inph >= -1) img.rect(x * ph, i * 2.5, 15, 5);
                     else img.rect(x, i * 2.5, 15, 5);
                 }
@@ -471,8 +473,6 @@ function shape(ph, seed, n, np, stk, col) {
 
 function draw() {
 
-    //img.clear();
-
     if (frameCount >= 120) {
         mot = false;
         noLoop();
@@ -481,8 +481,8 @@ function draw() {
         chcol = true;
         colaux = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
         colaux2 = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
-        alph = R.random_int(trph - 40, trph)
-        trph -= 40;
+        alph = R.random_int(trph - 30, trph)
+        trph -= 30;
         trcol -= 20;
     }
     cshapes.forEach(function (cs) {
@@ -498,7 +498,7 @@ function draw() {
 
 }
 
-function lerpColorScheme(n, colors, alph) {
+function lerpColorScheme(n, colors) {
     let i = n * (colors.length) % (colors.length);
     let color1 = color(colors[floor(i)]);
     let color2 = color(colors[(floor(i) + 1) % colors.length]);
