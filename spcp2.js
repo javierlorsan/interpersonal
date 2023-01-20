@@ -58,17 +58,15 @@ let WIDTH = window.innerWidth;
 let HEIGHT = window.innerHeight;
 let sz = Math.min(WIDTH, HEIGHT);
 let tokenData = genTokenData(448);
-let noiseScale = 9e-11;
 let colores = ["#f2eb8a", "#fed000", "#fc8405", "#ed361a", "#e2f0f3", "#b3dce0", "#4464a1", "#203051", "#ffc5c7", "#f398c3", "#cf3895", "#6d358a", "#06b4b0", "#4b8a5f", '#F2F4F8', '#0A0C08', '#e9edc9', '#fefae0', '#f1faee', '#FFF9F4', '#03071e', '#212529', '#081c15', '#EDF5FC', '#090B0B', '#121616', '#E9EDED', '#250902', '#43291f'];
 let tkid = tokenData.tokenId;
 let seed = parseInt(tokenData.hash.slice(0, 16), 16)
 let R = new Random(seed);
-let xinc = R.random_choice([0, 1, 2]);
+let xinc = R.random_choice([0, 1, 2, 2]);
 let inph = R.random_num(-2.7, 2.7);
 let cshapes = [];
 let w = sz;
 let mot = true;
-let bgcolor = R.random_choice(colores);
 let pntcur = R.random_dec();
 let nrot = R.random_choice([1, 2, 2, 3, 4, 2, 5]);
 let t = 0;
@@ -77,7 +75,6 @@ let rdd1 = R.random_int(10, 90);
 let rdd2 = R.random_int(90, 160);
 let rdinc = R.random_int(3, 8);
 let rdinc1 = R.random_int(4, 7);
-let rdiv = R.random_choice([1, 2]);
 let sp5r = R.random_int(90, 130);
 let lnth = (pntcur > 0.1) ? pntcur : 0.3;
 let shp5for = R.random_int(3, 9);
@@ -89,12 +86,9 @@ let gx1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
 let gy1 = R.random_int(-w / 2 * 0.30, w / 2 * 0.30);
 let gx2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
 let gy2 = R.random_int(-w / 2 * 0.15, w / 2 * 0.15);
-let colaux = R.random_choice(paleta)[R.random_int(0, 9)];
-let colaux2 = R.random_choice(paleta)[R.random_int(0, 9)];
 let trcol = 80;
-let alph = R.random_int(150, 175);
-let trph = 150;
 let lrpcol = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(80, 100);
+let colaux = R.random_choice(paleta)[R.random_int(0, 9)];
 
 
 function setup() {
@@ -107,8 +101,6 @@ function setup() {
     ellipseMode(CORNER);
 
     console.log(tokenData.hash + ' - ' + tkid);
-    
-    background(bgcolor);
 
     setGradCols();
 
@@ -196,7 +188,7 @@ function makeTl() {
         img.scale(prc);
     }
 
-    console.log(' sp5r: ' + sp5r + ' shp5for: ' + shp5for + ' - strk:' + strk + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
+    console.log(' sp5r: ' + sp5r + ' pntcur: ' + pntcur + ' - strk:' + strk + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - rdd1:' + rdd1 + ' - rdd2:' + rdd2 + ' - points:' + npoints);
 
     for (let i = 0; i < npoints - 1; i++) {
 
@@ -241,9 +233,6 @@ class cshape {
 
     changeCol(val) { this.chcol = val; }
 
-    changeStrk(val) { this.chstrk = val; }
-
-    init() { }
 }
 
 function shape(ph, seed, n, np) {
@@ -272,7 +261,7 @@ function shape(ph, seed, n, np) {
                 img.point(x * 2.5, i * ph);
                 break;
             case (xinc == 2):
-                let vr = (pntcur > 0.5) ? i * ph : i / ph;
+                let vr = (pntcur > 0.5) ? i * (ph*0.5) : i / (ph/0.5);
                 img.strokeWeight(lnth);
                 if (n < np / 5) { img.stroke(colaux); img.line(x, i, x, vr); }
                 else { img.noFill(); img.stroke(lrpcol); img.circle(x * 2.5, i * ph, rdinc1 / 3); }
@@ -291,9 +280,6 @@ function draw() {
         chcol = true;
         lrpcol = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol - 10);
         colaux = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
-        colaux2 = R.random_choice(paleta)[R.random_int(0, 9)] + R.random_int(trcol - 20, trcol);
-        alph = R.random_int(trph - 30, trph)
-        trph -= 30;
         trcol -= 20;
     }
     cshapes.forEach(function (cs) {
