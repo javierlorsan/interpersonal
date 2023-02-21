@@ -88,7 +88,7 @@ function calculateFeatures(tokenData) {
     let circles = false;
     let points = false;
     let _xinc = R1.random_choice([0, 1, 2]);
-    let _nrot = R1.random_choice([2, 3, 3, 4, 2, 4, 5, 1]);
+    let _nrot = R1.random_choice([5, 2, 5, 4, 2, 4, 3, 3, 1, 2]);
     let _strk = 1;
     let personality = R1.random_choice(["selfish", "empathetic", "extroverted", "introverted", "rebellious", "conservative"]);
 
@@ -121,7 +121,7 @@ function calculateFeatures(tokenData) {
     }
 
     if (_nrot == 1 && _xinc <= 2) { personality = 'selfish'; }
-    if (_xinc == 2 && _nrot >= 2) _strk = R1.random_choice([0, 1, 1]);
+    if (_xinc == 2 && _nrot >= 2) _strk = R1.random_choice([0, 1]);
     if (_strk == 0 && _xinc == 2 && _nrot > 1) personality = 'rebellious';
 
     return {
@@ -207,6 +207,8 @@ let stkdv1 = 100;
 let sdcol = R.random_choice(colsdw);
 let offx = R.random_choice([-1, 1]);
 let offy = R.random_choice([-1, 1]);
+let r1por = R.random_int(10, 99);
+let r1tp = R.random_dec();
 
 
 function setup() {
@@ -379,6 +381,7 @@ class cshape {
         }
 
         shape(this.ph, this.rseed, this.n, this.np);
+
         if (this.inde == 'des') { this.ph -= this.speed; } else { this.ph += this.speed }
 
         if (this.ph >= mxmn) this.inde = 'des'
@@ -394,7 +397,7 @@ function shape(ph, seed, n, np) {
     let s = frameCount * 120.27; 
     for (let i = 0; i < sp5r; i += shp5for) {
         img.rotate(PI / nrot);
-        let r1 = (657 / rdd1) + sin(i * 10 + ph) * rdd2;
+        let r1 = (r1tp > 0.4) ? (657 / rdd1) + sin(i * r1por + ph) * rdd2 : (657 / rdd1) + cos(i * r1por + ph) * rdd2;
         t += seed;
         switch (true) {
             case (strk == 0):
@@ -403,13 +406,13 @@ function shape(ph, seed, n, np) {
             case (strk == 1):
                 switch (true) {
                     case (rnstk2 < 0.5):
-                        x = sin(t) * (i / stkdv1) * r1;
+                        x = sin(t) * (i / stkdv1) * r1 * tan(i);
                         break;
                     case (rnstk2 < 0.75):
-                        x = sin(t) * (i / stkdv1) * r1 * cos(i);
+                        x = sin(t) * (i / stkdv1) * r1 * cos(i) * tan(i);
                         break;
                     default:
-                        x = sin(t) * (i / stkdv1) * r1 * sin(i);
+                        x = sin(t) * (i / stkdv1) * r1 * sin(i) * tan(i);
                         break;
                 }
                 break;
@@ -426,9 +429,9 @@ function shape(ph, seed, n, np) {
                 break;
             case (xinc == 2):
                 let vr = (pntcur > 0.6) ? i * (ph * 0.5) : i / (ph / 0.5);
-                let xn = (xnc2 >= 0.5) ? -1 : 1; 
+                let xn = (xnc2 > 0.5) ? -1 : 1; 
                 img.strokeWeight(lnth);
-                if (n < np / 5) { img.stroke(colaux); img.line(x, i, x * xn, vr); }
+                if (n < np / 10) { img.stroke(colaux); img.line(x, i, x * xn, vr); }
                 else { img.noFill(); img.stroke(lrpcol); img.circle(x * 2.5, i * ph, rdinc1 / 3); }
                 break;
         }
@@ -456,6 +459,7 @@ function draw() {
     setGrad(createVector(0, 0), w);
 
     imgClone = img.get();
+    
     image(imgClone, 0, 0);
 
 }
