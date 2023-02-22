@@ -209,6 +209,7 @@ let offx = R.random_choice([-1, 1]);
 let offy = R.random_choice([-1, 1]);
 let r1por = R.random_int(10, 99);
 let r1tp = R.random_dec();
+let opXT = R.random_dec();
 
 
 function setup() {
@@ -348,7 +349,7 @@ function makeTl() {
         img.scale(prc);
     }
 
-    console.log(' inph: ' + inph + ' pntcur: ' + pntcur + ' - strk:' + strk + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - sp5r:' + sp5r + ' - mxmn:' + mxmn + ' - points:' + npoints);
+    console.log(' opXT: ' + opXT + ' pntcur: ' + pntcur + ' - strk:' + strk + ' - xinc:' + xinc + ' - nrot:' + nrot + ' - sp5r:' + sp5r + ' - mxmn:' + mxmn + ' - points:' + npoints);
 
     for (let i = 0; i < npoints; i++) {
         cshapes.push(new cshape(tp, i, npoints))
@@ -392,6 +393,18 @@ class cshape {
 
 }
 
+function doCalc(opX, opT) {
+
+    if (nrot == 1) return opX;
+
+    switch (true) {
+        case (opXT < 0.35): return opX / opT;
+        case (opXT < 0.7): return opX * opT;
+        default: return opX;
+    }
+
+}
+
 function shape(ph, seed, n, np) {
     let x;
     let s = frameCount * 120.27; 
@@ -406,13 +419,13 @@ function shape(ph, seed, n, np) {
             case (strk == 1):
                 switch (true) {
                     case (rnstk2 < 0.5):
-                        x = sin(t) * (i / stkdv1) * r1 * tan(i);
+                        x = doCalc(sin(t) * (i / stkdv1) * r1, tan(i));
                         break;
                     case (rnstk2 < 0.75):
-                        x = sin(t) * (i / stkdv1) * r1 * cos(i) * tan(i);
+                        x = doCalc(sin(t) * (i / stkdv1) * r1 * cos(i), tan(i));
                         break;
                     default:
-                        x = sin(t) * (i / stkdv1) * r1 * sin(i) * tan(i);
+                        x = doCalc(sin(t) * (i / stkdv1) * r1 * sin(i), tan(i));
                         break;
                 }
                 break;
@@ -458,9 +471,9 @@ function draw() {
 
     setGrad(createVector(0, 0), w);
 
-    imgClone = img.get();
+    //imgClone = img.get();
     
-    image(imgClone, 0, 0);
+    image(img.get(), 0, 0);
 
 }
 
